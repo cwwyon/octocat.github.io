@@ -97,3 +97,140 @@ safeRun(() => {
   if(!cake || !secretMsg) return;
   let secretIndex = 0;
   cake.addEventListener('click', (e)=>{
+    secretMsg.textContent = secrets[secretIndex % secrets.length];
+    secretIndex++;
+    launchFireworks(e.clientX, e.clientY);
+  });
+});
+
+// ---------- buff button ----------
+safeRun(() => {
+  const buffs = [
+    "精准暴击 Buff：三角洲爆头率 +50%，一枪一个突突突",
+    "充能满格 Buff：睡眠质量拉满，通宵有理，早八不慌",
+    "连胜守护 Buff：排位连跪概率清零，本年只上分不掉分",
+    "千场老兵 Buff：三角洲撤离成功率 +100%，队友坑不倒你",
+    "好运加身 Buff：抽卡欧气+99，出货全靠手气",
+    "隐藏富豪 Buff：想买的显卡/键盘/手办，钱包突然够用"
+  ];
+  const btn = document.getElementById('buffBtn');
+  const out = document.getElementById('buff-output');
+  if(!btn || !out) return;
+  btn.addEventListener('click', ()=>{
+    const pick = buffs[Math.floor(Math.random()*buffs.length)];
+    out.style.opacity = 0;
+    setTimeout(()=>{
+      out.textContent = pick;
+      out.style.transition = 'opacity 0.4s';
+      out.style.opacity = 1;
+    }, 150);
+  });
+});
+
+// ---------- target raid shooting mini-game ----------
+safeRun(() => {
+  const targetIcons = ['👾','💀','🛰️','🤖'];
+  const decoyIcons = ['💣','☠️'];
+  const shootArena = document.getElementById('shootArena');
+  const shootScoreEl = document.getElementById('shootScore');
+  const shootTimeEl = document.getElementById('shootTime');
+  const shootStartBtn = document.getElementById('shootStartBtn');
+  const shootResetBtn = document.getElementById('shootResetBtn');
+  const shootResult = document.getElementById('shoot-result');
+  if(!shootArena || !shootScoreEl || !shootTimeEl || !shootStartBtn || !shootResetBtn || !shootResult) return;
+
+  const jackpotText = "突袭成功！防线已突破，隐藏款神秘礼物一份！\n7月11日现实到货，记得查收～";
+  const GAME_TIME = 20;
+  const WIN_SCORE = 18;
+  const DECOY_CHANCE = 0.3;
+
+  var shootScore = 0;
+  var shootTimeLeft = GAME_TIME;
+  var shootRunning = false;
+  var spawnTimerId = null;
+  var countdownTimerId = null;
+
+  function spawnTarget(){
+    if(!shootRunning) return;
+    var isDecoy = Math.random() < DECOY_CHANCE;
+    var pool = isDecoy ? decoyIcons : targetIcons;
+    var target = document.createElement('div');
+    target.className = 'shoot-target' + (isDecoy ? ' decoy' : '');
+    target.textContent = pool[Math.floor(Math.random()*pool.length)];
+    var arenaW = shootArena.clientWidth;
+    var arenaH = shootArena.clientHeight;
+    var size = 28;
+    var maxX = Math.max(arenaW - size, 10);
+    var maxY = Math.max(arenaH - size, 10);
+    target.style.left = Math.floor(Math.random()*maxX) + 'px';
+    target.style.top = Math.floor(Math.random()*maxY) + 'px';
+    shootArena.appendChild(target);
+    var lifetime = 750 + Math.random()*300;
+    var missTimer = setTimeout(function(){ if(target.parentNode) target.remove(); }, lifetime);
+    target.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(!shootRunning || target.classList.contains('hit')) return;
+      clearTimeout(missTimer);
+      target.classList.add('hit');
+      if(isDecoy){ shootScore = Math.max(0, shootScore - 2); } else { shootScore++; }
+      shootScoreEl.textContent = shootScore;
+      setTimeout(function(){ if(target.parentNode) target.remove(); }, 200);
+    });
+  }
+
+  function startShootGame(){
+    shootScore = 0;
+    shootTimeLeft = GAME_TIME;
+    shootScoreEl.textContent = '0';
+    shootTimeEl.textContent = GAME_TIME;
+    shootResult.textContent = '';
+    shootResult.classList.remove('jackpot', 'fail');
+    shootArena.innerHTML = '';
+    shootRunning = true;
+    shootStartBtn.disabled = true;
+    shootStartBtn.textContent = '突袭中...';
+    shootResetBtn.style.display = 'inline-block';
+    spawnTimerId = setInterval(spawnTarget, 380);
+    countdownTimerId = setInterval(function(){
+      shootTimeLeft--;
+      shootTimeEl.textContent = shootTimeLeft;
+      if(shootTimeLeft <= 0) endShootGame();
+    }, 1000);
+  }
+
+  function endShootGame(){
+    shootRunning = false;
+    clearInterval(spawnTimerId);
+    clearInterval(countdownTimerId);
+    shootArena.innerHTML = '';
+    shootStartBtn.disabled = false;
+    shootStartBtn.textContent = '再次突袭 ▸';
+    if(shootScore >= WIN_SCORE){
+      shootResult.textContent = jackpotText + '\n（本次命中 ' + shootScore + ' 个目标）';
+      shootResult.classList.add('jackpot');
+      launchFireworks(innerWidth/2, innerHeight/2);
+    } else {
+      shootResult.textContent = '本次命中 ' + shootScore + ' 个目标，还差 ' + (WIN_SCORE - shootScore) + ' 个才能突破防线，再试一次！';
+      shootResult.classList.add('fail');
+    }
+  }
+
+  function resetShootGame(){
+    shootRunning = false;
+    clearInterval(spawnTimerId);
+    clearInterval(countdownTimerId);
+    shootArena.innerHTML = '';
+    shootScore = 0;
+    shootTimeLeft = GAME_TIME;
+    shootScoreEl.textContent = '0';
+    shootTimeEl.textContent = GAME_TIME;
+    shootResult.textContent = '';
+    shootResult.classList.remove('jackpot', 'fail');
+    shootStartBtn.disabled = false;
+    shootStartBtn.textContent = '开始突袭 ▸';
+    shootResetBtn.style.display = 'none';
+  }
+
+  shootStartBtn.addEventListener('click', startShootGame);
+  shootResetBtn.addEventListener('click', resetShootGame);
+});
