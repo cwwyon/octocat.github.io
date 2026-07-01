@@ -217,11 +217,12 @@ main{position:relative;z-index:3;max-width:1000px;margin:0 auto;padding:40px 20p
 }
 
 /* ---------- target raid shooting game ---------- */
+/* ---------- target raid shooting mini-game ---------- */
 .shoot-zone{padding-top:10px;}
-.shoot-status{font-size:12px;color:var(--neon-cyan);margin-bottom:16px;letter-spacing:1px;}
+.shoot-status{font-size:13px;color:var(--neon-cyan);margin-bottom:16px;letter-spacing:1px;}
 .shoot-arena{
   position:relative;width:100%;max-width:480px;height:280px;
-  margin:0 auto 20px;border-radius:12px;overflow:hidden;
+  margin:0 auto 16px;border-radius:12px;overflow:hidden;
   border:2px solid var(--neon-cyan);
   background:
     repeating-linear-gradient(0deg, rgba(0,255,242,0.06) 0 1px, transparent 1px 22px),
@@ -241,6 +242,14 @@ main{position:relative;z-index:3;max-width:1000px;margin:0 auto;padding:40px 20p
 @keyframes targetPop{from{transform:scale(0);}to{transform:scale(1);}}
 .shoot-target.hit{animation:targetHit 0.25s forwards;pointer-events:none;}
 @keyframes targetHit{to{transform:scale(1.7);opacity:0;}}
+
+.shoot-controls{margin-bottom:6px;}
+.ghost-btn{
+  border-color:var(--neon-cyan);color:var(--neon-cyan);
+  padding:8px 20px;font-size:12px;margin-top:0;
+}
+.ghost-btn:hover{background:var(--neon-cyan);color:#05010f;box-shadow:0 0 16px var(--neon-cyan);}
+
 #shoot-result{
   margin:6px auto 18px;font-size:14px;line-height:1.8;
   max-width:420px;min-height:20px;white-space:pre-line;
@@ -257,7 +266,6 @@ main{position:relative;z-index:3;max-width:1000px;margin:0 auto;padding:40px 20p
   from{box-shadow:0 0 20px rgba(255,46,196,0.5) inset;}
   to{box-shadow:0 0 50px rgba(0,255,242,0.7) inset;}
 }
-
 footer{
   text-align:center;margin-top:80px;color:#665a8f;font-size:12px;
   letter-spacing:2px;
