@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>SYSTEM.BIRTHDAY // 漆欣航</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="boot">
+  <div class="line" style="animation-delay:.1s">&gt; INITIATING BIRTHDAY.EXE ...</div>
+  <div class="line" style="animation-delay:.4s">&gt; TARGET USER: 漆欣航</div>
+  <div class="line" style="animation-delay:.7s">&gt; ROLE: 资深玩家 / 排位常客 / 认证宅男</div>
+  <div class="line" style="animation-delay:1.0s">&gt; LOADING BLESSINGS.PACKAGE ...</div>
+  <div class="bar-track" style="animation-delay:1.2s"><div class="bar-fill" id="bar"></div></div>
+</div>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+<div class="noise-flicker"></div>
+<canvas id="fx-canvas"></canvas>
+
+<main>
+
+  <section class="hero">
+    <div class="glitch" data-text="HAPPY BIRTHDAY">HAPPY BIRTHDAY</div>
+    <div class="subtitle"><span class="typewriter" id="typewriter"></span></div>
+    <div class="status-tag">PLAYER: 漆欣航 &nbsp;|&nbsp; STATUS: LEVEL UP ✦</div>
+  </section>
+
+  <section>
+    <div class="section-title"><span class="num">01</span>成就解锁 // ACHIEVEMENTS UNLOCKED</div>
+    <div class="achv-grid">
+      <div class="achv-card">
+        <span class="badge">千场老兵</span>
+        <div class="icon">🪖</div>
+        <h3>《三角洲行动 千场3.0》</h3>
+        <p>撤离千次，人还在、狗牌也在，KD 稳定 3.0。地图刻进肌肉记忆，别人搜刮的时候你已经在摸鱼蹲人了。</p>
+      </div>
+      <div class="achv-card">
+        <span class="badge">高手</span>
+        <div class="icon">🔫</div>
+        <h3>《无畏契约高手》</h3>
+        <p>枪法犀利，走位飘忽，此生要么在上分，要么在上分的路上。队友：他玩，我看戏。</p>
+      </div>
+      <div class="achv-card">
+        <span class="badge">封神</span>
+        <div class="icon">❄️</div>
+        <h3>《极地大乱斗之神》</h3>
+        <p>英雄联盟大乱斗专精人士，兵线还没到你已经先手开团，一穿四只是日常操作。</p>
+      </div>
+      <div class="achv-card">
+        <span class="badge">隐藏</span>
+        <div class="icon">🛋️</div>
+        <h3>《居家结界法师》</h3>
+        <p>周末不出门成就达成，房门即结界，外卖即补给。愿你今年继续宅得心安理得。</p>
+      </div>
+      <div class="achv-card">
+        <span class="badge">传说</span>
+        <div class="icon">⚡</div>
+        <h3>《人间清醒Debuff免疫》</h3>
+        <p>无论队友多坑、连跪多少把，你总能一边骂一边carry回来。抗压值拉满，本回合额外抽一张蛋糕卡。</p>
+      </div>
+      <div class="achv-card">
+        <span class="badge">彩蛋</span>
+        <div class="icon">🕹️</div>
+        <h3>《氪金理智派》</h3>
+        <p>该氪的从不手软，该攒的绝不多花，堪称游戏经济学教科书级人物。</p>
+      </div>
+      <div class="achv-card">
+        <span class="badge">今日限定</span>
+        <div class="icon">🎂</div>
+        <h3>《又长了一岁》</h3>
+        <p>成就达成条件：活着且过生日。奖励：全世界（至少这个网页）的祝福，外加一整年的好运。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title"><span class="num">02</span>记忆存档 // PHOTO ARCHIVE</div>
+    <div class="photo-grid">
+      <div class="photo-slot">
+        <img src="085f4fc3aa5d67384f1307ec08e8dcd9.jpg" alt="漫展持剑">
+        <div class="tag"><b>存档01</b><br>漫展支线任务：装备神器长剑，战力临时+9999</div>
+      </div>
+      <div class="photo-slot">
+        <img src="1569fbe59ceba06c7561e8d99e0692b1.jpg" alt="生日蛋糕">
+        <div class="tag"><b>存档02</b><br>历史周目回放：电视里在打游戏，桌上蛋糕已就位</div>
+      </div>
+      <div class="photo-slot">
+        <img src="18b7f25de56eb7a82db5e7a04de175e0.jpg" alt="团建举杯">
+        <div class="tag"><b>存档03</b><br>线下团本：五人小队集结，杯子里都是战利品</div>
+      </div>
+      <div class="photo-slot">
+        <img src="75cdcb3092b728bb6bbf3ec2689f0e9a.jpg" alt="花墙夜景">
+        <div class="tag"><b>存档04</b><br>隐藏地图：氛围感支线，成功触发夜间彩蛋</div>
+      </div>
+      <div class="photo-slot">
+        <img src="76cd3bfa0400bbb851ce9a4c67340331.jpg" alt="饭桌合影">
+        <div class="tag"><b>存档05</b><br>补给站签到：社交模式已启动，血量已回满</div>
+      </div>
+      <div class="photo-slot">
+        <img src="a1ed959f848d81317775b0a3147f9b92.jpg" alt="双人自拍">
+        <div class="tag"><b>存档06</b><br>双人成行：队友加载完毕，本局稳赢</div>
+      </div>
+      <div class="photo-slot">
+        <img src="a6433b20c47c29c142f32e83885e8ab2.jpg" alt="街头聚会">
+        <div class="tag"><b>存档07</b><br>临时驻点：摸鱼小队集合完毕，等待下一个任务</div>
+      </div>
+      <div class="photo-slot">
+        <img src="b128b9345fb28f17f47441d73e1dca5f.jpg" alt="沙滩合影">
+        <div class="tag"><b>存档08</b><br>沙滩地图：八人本推图成功，成就已解锁</div>
+      </div>
+      <div class="photo-slot">
+        <img src="c88752d3cf162ab70e569422db2173c2.jpg" alt="无畏契约比赛现场">
+        <div class="tag"><b>存档09</b><br>无畏契约支线：战斗觉醒现场，全员比耶</div>
+      </div>
+    </div>
+    <p class="photo-hint">// 更多存档随时可以补充，把新照片放进同一文件夹并加一张 photo-slot 即可点亮</p>
+  </section>
+
+  <section>
+    <div class="section-title"><span class="num">03</span>触发事件 // INTERACT</div>
+    <div class="interactive">
+      <div id="cake" title="点我！">🎂</div>
+      <div id="cake-hint">点击蛋糕，触发庆生特效</div>
+      <div id="secret-msg"></div>
+
+      <br>
+      <button class="buff-btn" id="buffBtn">抽取今日祝福 BUFF ▸</button>
+      <div id="buff-output"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title"><span class="num">04</span>记忆潜入协议 // MEMORY BREACH</div>
+    <div class="interactive mem-zone">
+      <p class="photo-hint" style="margin-top:0;margin-bottom:16px;">找出全部 6 组配对芯片，即可入侵保险库，解锁隐藏关卡奖励</p>
+      <div class="mem-status">步数：<span id="memMoves">0</span> &nbsp;|&nbsp; 已配对：<span id="memPairs">0</span> / 6</div>
+      <div class="mem-grid" id="memGrid"></div>
+      <div id="mem-result"></div>
+      <button class="buff-btn" id="memRetryBtn">重新挑战 ▸</button>
+    </div>
+  </section>
+
+  <footer>
+    &lt;/BIRTHDAY.EXE&gt; RUNNING FOREVER FOR <span>漆欣航</span> · GENERATED WITH 🩷 BY YOUR FRIEND
+  </footer>
+
+</main>
+
+<script src="script.js"></script>
+
+</body>
+</html>
