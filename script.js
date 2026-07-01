@@ -216,21 +216,11 @@ safeRun(() => {
   }
 
   function resetShootGame(){
-    shootRunning = false;
     clearInterval(spawnTimerId);
     clearInterval(countdownTimerId);
     shootArena.innerHTML = '';
-    shootScore = 0;
-    shootTimeLeft = GAME_TIME;
-    shootScoreEl.textContent = '0';
-    shootTimeEl.textContent = GAME_TIME;
-    shootResult.textContent = '';
-    shootResult.classList.remove('jackpot', 'fail');
-    shootStartBtn.disabled = false;
-    shootStartBtn.textContent = '开始突袭 ▸';
-    shootResetBtn.style.display = 'none';
+    startShootGame();
   }
-
   shootStartBtn.addEventListener('click', startShootGame);
   shootResetBtn.addEventListener('click', resetShootGame);
 });
