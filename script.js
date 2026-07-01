@@ -117,94 +117,101 @@ animate();
 // auto fireworks once boot finishes, as a welcome burst
 setTimeout(()=>{ launchFireworks(innerWidth/2, innerHeight*0.3); }, 3000);
 
-// ---------- memory breach mini-game ----------
-const memIcons = ['🪖','🔫','❄️','🛋️','⚡','🕹️'];
-const memGrid = document.getElementById('memGrid');
-const memMovesEl = document.getElementById('memMoves');
-const memPairsEl = document.getElementById('memPairs');
-const memResult = document.getElementById('mem-result');
-const memRetryBtn = document.getElementById('memRetryBtn');
+// ---------- target raid shooting mini-game ----------
+const targetIcons = ['👾','💀','🛰️','🤖'];
+const decoyIcons = ['💣','☠️'];
+const shootArena = document.getElementById('shootArena');
+const shootScoreEl = document.getElementById('shootScore');
+const shootTimeEl = document.getElementById('shootTime');
+const shootStartBtn = document.getElementById('shootStartBtn');
+const shootResult = document.getElementById('shoot-result');
 
-const jackpotText = "🎁 系统入侵成功！\n保险库解锁——隐藏款神秘礼物一份！\n7月11日现实到货，记得查收～";
+const jackpotText = "🎁 突袭成功！防线已突破——隐藏款神秘礼物一份！\n7月11日现实到货，记得查收～";
 
-let memDeck = [];
-let memFlipped = [];
-let memMatchedCount = 0;
-let memMoves = 0;
-let memLocked = false;
+const GAME_TIME = 20;
+const WIN_SCORE = 18;
+const DECOY_CHANCE = 0.3;
+let shootScore = 0;
+let shootTimeLeft = GAME_TIME;
+let shootRunning = false;
+let spawnTimerId = null;
+let countdownTimerId = null;
 
-function shuffle(arr){
-  for(let i = arr.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
+function spawnTarget(){
+  if(!shootRunning) return;
+  const isDecoy = Math.random() < DECOY_CHANCE;
+  const pool = isDecoy ? decoyIcons : targetIcons;
+  const target = document.createElement('div');
+  target.className = 'shoot-target' + (isDecoy ? ' decoy' : '');
+  target.textContent = pool[Math.floor(Math.random()*pool.length)];
 
-function buildMemGame(){
-  memDeck = shuffle([...memIcons, ...memIcons]);
-  memFlipped = [];
-  memMatchedCount = 0;
-  memMoves = 0;
-  memLocked = false;
-  memResult.textContent = '';
-  memResult.classList.remove('jackpot');
-  memMovesEl.textContent = '0';
-  memPairsEl.textContent = '0';
+  const arenaW = shootArena.clientWidth;
+  const arenaH = shootArena.clientHeight;
+  const size = 28;
+  const maxX = Math.max(arenaW - size, 10);
+  const maxY = Math.max(arenaH - size, 10);
+  target.style.left = Math.floor(Math.random()*maxX) + 'px';
+  target.style.top = Math.floor(Math.random()*maxY) + 'px';
+  shootArena.appendChild(target);
 
-  memGrid.innerHTML = '';
-  memDeck.forEach((icon, idx)=>{
-    const card = document.createElement('div');
-    card.className = 'mem-card';
-    card.dataset.index = idx;
-    card.dataset.icon = icon;
-    card.innerHTML = `
-      <div class="mem-card-inner">
-        <div class="mem-face mem-face-front">🎴</div>
-        <div class="mem-face mem-face-back">${icon}</div>
-      </div>`;
-    card.addEventListener('click', onMemCardClick);
-    memGrid.appendChild(card);
+  const lifetime = 480 + Math.random()*280;
+  const missTimer = setTimeout(()=>{
+    if(target.parentNode) target.remove();
+  }, lifetime);
+
+  target.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    if(!shootRunning || target.classList.contains('hit')) return;
+    clearTimeout(missTimer);
+    target.classList.add('hit');
+    if(isDecoy){
+      shootScore = Math.max(0, shootScore - 2);
+    } else {
+      shootScore++;
+    }
+    shootScoreEl.textContent = shootScore;
+    setTimeout(()=>{ if(target.parentNode) target.remove(); }, 200);
   });
 }
 
-function onMemCardClick(e){
-  const card = e.currentTarget;
-  if(memLocked || card.classList.contains('flipped') || card.classList.contains('matched')) return;
-  card.classList.add('flipped');
-  memFlipped.push(card);
+function startShootGame(){
+  shootScore = 0;
+  shootTimeLeft = GAME_TIME;
+  shootScoreEl.textContent = '0';
+  shootTimeEl.textContent = GAME_TIME;
+  shootResult.textContent = '';
+  shootResult.classList.remove('jackpot', 'fail');
+  shootArena.innerHTML = '';
+  shootRunning = true;
+  shootStartBtn.disabled = true;
+  shootStartBtn.textContent = '突袭中...';
 
-  if(memFlipped.length === 2){
-    memLocked = true;
-    memMoves++;
-    memMovesEl.textContent = memMoves;
-    const [a, b] = memFlipped;
-    if(a.dataset.icon === b.dataset.icon){
-      setTimeout(()=>{
-        a.classList.add('matched');
-        b.classList.add('matched');
-        memMatchedCount++;
-        memPairsEl.textContent = memMatchedCount;
-        memFlipped = [];
-        memLocked = false;
-        if(memMatchedCount === memIcons.length){
-          memResult.textContent = jackpotText + `\n（本次用了 ${memMoves} 步破译系统）`;
-          memResult.classList.add('jackpot');
-          launchFireworks(innerWidth/2, innerHeight/2);
-        }
-      }, 300);
-    } else {
-      a.classList.add('shake');
-      b.classList.add('shake');
-      setTimeout(()=>{
-        a.classList.remove('flipped', 'shake');
-        b.classList.remove('flipped', 'shake');
-        memFlipped = [];
-        memLocked = false;
-      }, 700);
+  spawnTimerId = setInterval(spawnTarget, 380);
+  countdownTimerId = setInterval(()=>{
+    shootTimeLeft--;
+    shootTimeEl.textContent = shootTimeLeft;
+    if(shootTimeLeft <= 0){
+      endShootGame();
     }
+  }, 1000);
+}
+
+function endShootGame(){
+  shootRunning = false;
+  clearInterval(spawnTimerId);
+  clearInterval(countdownTimerId);
+  shootArena.innerHTML = '';
+  shootStartBtn.disabled = false;
+  shootStartBtn.textContent = '再次突袭 ▸';
+
+  if(shootScore >= WIN_SCORE){
+    shootResult.textContent = jackpotText + `\n（本次命中 ${shootScore} 个目标）`;
+    shootResult.classList.add('jackpot');
+    launchFireworks(innerWidth/2, innerHeight/2);
+  } else {
+    shootResult.textContent = `本次命中 ${shootScore} 个目标，还差 ${WIN_SCORE - shootScore} 个才能突破防线，再试一次！`;
+    shootResult.classList.add('fail');
   }
 }
 
-memRetryBtn.addEventListener('click', buildMemGame);
-buildMemGame();
+shootStartBtn.addEventListener('click', startShootGame);
